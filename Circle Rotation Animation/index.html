@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Circle Rotation Animation</title>
+	<style>
+		.main-container{
+			width: 300px;
+			height: 300px;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.circle{
+			width: 100%;
+			height: 100%;
+			border: 5px solid ;
+			border-radius: 50%;
+			position: absolute;
+		}
+		.one{
+			border-color: red;
+			animation: animation01 5s ease-in infinite;
+		}
+			.two{
+			border-color: black;
+			animation: animation02 5s ease-in-out infinite;
+		}
+			.three{
+			border-color: darkorange;
+			animation: animation03 5s ease-out infinite;
+		}
+
+		@keyframes animation01{
+			0%{
+				rotate: 0deg;
+				width: 100%;
+			}
+			50%{
+				
+				width: 40%;
+			}
+			100%{
+				rotate: 360deg;
+			}
+		}
+			@keyframes animation02{
+			0%{
+				rotate: 0deg;
+				width: 100%;
+			}
+			50%{
+				
+				width: 40%;
+			}
+			100%{
+				rotate: 360deg;
+			}
+		}
+			@keyframes animation03{
+			0%{
+				rotate: 0deg;
+				width: 100%;
+			}
+			50%{
+				
+				width: 40%;
+			}
+			100%{
+				rotate: 360deg;
+			}
+		}
+	</style>
+</head>
+<body>
+	<section class="main-container">
+		<div class="circle one"></div>
+		<div class="circle two"></div>
+		<div class="circle three"></div>
+
+	</section>
+</body>
+</html>
