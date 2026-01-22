@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Glow Flip Cards</title>
+
+<style>
+/* ================== GLOBAL THEME ================== */
+:root {
+    --card-bg: #000;
+    --border-size: 7px;
+    --radius: 24px;
+    --spin-speed: 6s;
+    --spin-speed-hover: 2s;
+}
+
+/* ================== LAYOUT ================== */
+body {
+    background: #0a0a0a;
+    font-family: system-ui, sans-serif;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    padding: 60px;
+    justify-items: center;
+}
+
+/* ================== CARD CORE ================== */
+.card {
+    width: 220px;
+    height: 300px;
+    perspective: 1000px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+}
+
+/* 🎭 FLIP */
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+/* ================== FRONT / BACK ================== */
+.card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.card-front {
+    background: var(--card-bg);
+}
+
+.card-back {
+    background: #111;
+    transform: rotateY(180deg);
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* ================== TEXT ================== */
+.card h1 {
+    z-index: 2;
+    color: white;
+}
+
+/* ================== ANIMATED BORDER ================== */
+.card-front::before {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 160%;
+    background: linear-gradient(
+        180deg,
+        var(--c1),
+        var(--c2),
+        var(--c3)
+    );
+    animation: spin var(--spin-speed) linear infinite;
+    filter: blur(8px);
+    box-shadow: 0 0 40px var(--glow);
+}
+
+/* ✨ SPEED UP ON HOVER */
+.card:hover .card-front::before {
+    animation-duration: var(--spin-speed-hover);
+}
+
+.card-front::after {
+    content: '';
+    position: absolute;
+    inset: var(--border-size);
+    background: var(--card-bg);
+    border-radius: calc(var(--radius) - 6px);
+    z-index: 1;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ================== CARD THEMES ================== */
+.blue {
+    --c1: #00f2ff;
+    --c2: #0066ff;
+    --c3: #8a2be2;
+    --glow: rgba(0, 140, 255, 0.9);
+}
+
+.pink {
+    --c1: #ff2fd4;
+    --c2: #ff0080;
+    --c3: #8a2be2;
+    --glow: rgba(255, 47, 212, 0.9);
+}
+
+.green {
+    --c1: #00ff9d;
+    --c2: #00c853;
+    --c3: #1de9b6;
+    --glow: rgba(0, 255, 160, 0.9);
+}
+
+.red {
+    --c1: #ff1744;
+    --c2: #ff5252;
+    --c3: #ff9100;
+    --glow: rgba(255, 70, 70, 0.9);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card blue">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <h1>GOJO</h1>
+            </div>
+            <div class="card-face card-back">
+                Strongest Sorcerer
+            </div>
+        </div>
+    </div>
+
+    <div class="card pink">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <h1>SUKUNA</h1>
+            </div>
+            <div class="card-face card-back">
+                King of Curses
+            </div>
+        </div>
+    </div>
+
+    <div class="card green">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <h1>ITADORI</h1>
+            </div>
+            <div class="card-face card-back">
+                Vessel
+            </div>
+        </div>
+    </div>
+
+    <div class="card red">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <h1>MEGUMI</h1>
+            </div>
+            <div class="card-face card-back">
+                Ten Shadows
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

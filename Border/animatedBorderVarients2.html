@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glow Flip Card – Auto Theme + Motion Blur</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  body {
+    background: #0b0f1a; /* dark blue-black background */
+    overflow: hidden;
+  }
+
+  /* 3D helpers */
+  .perspective { perspective: 1400px; }
+  .preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+
+  /* particles */
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    from { transform: translateY(110vh); }
+    to { transform: translateY(-10vh); }
+  }
+
+  /* spin animation for border */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* motion blur for flip */
+  .motion-blur {
+    filter: blur(3px);
+    transition: filter 0.3s ease;
+  }
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+<!-- PARTICLES -->
+<div id="particles" class="absolute inset-0"></div>
+
+<!-- CARD -->
+<div class="perspective relative z-10">
+  <div id="card" class="relative w-[260px] h-[340px] preserve-3d transition-transform duration-700 cursor-pointer">
+
+    <!-- FRONT -->
+    <div class="absolute inset-0 rounded-3xl overflow-hidden backface-hidden flex items-center justify-center">
+      <!-- border glow -->
+      <div id="border" class="absolute w-[150px] h-[180%] blur-md opacity-90"></div>
+
+      <!-- inner card -->
+      <div class="absolute inset-[10px] bg-[#11141f] rounded-2xl z-10"></div>
+
+      <!-- text -->
+      <h1 class="z-20 text-3xl font-extrabold tracking-wide text-white">GOJO</h1>
+    </div>
+
+    <!-- BACK -->
+    <div class="absolute inset-0 rounded-3xl bg-[#11141f] flex items-center justify-center
+      rotate-y-180 backface-hidden text-indigo-300 text-lg font-semibold">
+      Strongest Sorcerer
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ---------- PARTICLES ---------- */
+const particleBox = document.getElementById("particles");
+for (let i=0; i<90; i++){
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random()*100 + "vw";
+  p.style.animationDuration = 5 + Math.random()*10 + "s";
+  particleBox.appendChild(p);
+}
+
+/* ---------- THEMES (auto-rotate) ---------- */
+const themes = [
+  ["#22d3ee","#6366f1","#ec4899","rgba(99,102,241,.6)"], // cyan-violet-pink
+  ["#fb7185","#ec4899","#c026d3","rgba(236,72,153,.6)"], // pink
+  ["#34d399","#10b981","#22c55e","rgba(16,185,129,.6)"], // green
+  ["#fbbf24","#f97316","#fb923c","rgba(249,115,22,.6)"]  // amber
+];
+const border = document.getElementById("border");
+let themeIndex = 0;
+
+function applyTheme(i){
+  const [c1,c2,c3,glow] = themes[i];
+  border.style.background = `linear-gradient(180deg, ${c1}, ${c2}, ${c3})`;
+  border.style.boxShadow = `0 0 40px ${glow}`;
+  border.style.animation = "spin 6s linear infinite";
+}
+
+applyTheme(0);
+setInterval(()=>{
+  themeIndex = (themeIndex + 1) % themes.length;
+  applyTheme(themeIndex);
+}, 4000);
+
+/* ---------- CARD INTERACTION ---------- */
+const card = document.getElementById("card");
+let flipped = false;
+
+card.addEventListener("click", () => {
+  flipped = !flipped;
+  // motion blur effect
+  card.classList.add("motion-blur");
+  setTimeout(()=> card.classList.remove("motion-blur"), 300);
+});
+
+/* ---------- MAGNETIC + PARALLAX ---------- */
+card.addEventListener("mousemove", e => {
+  const r = card.getBoundingClientRect();
+  const x = ((e.clientX - r.left)/r.width - 0.5) * 16;
+  const y = ((e.clientY - r.top)/r.height - 0.5) * -16;
+  card.style.transform = `
+    rotateY(${flipped?180:0}deg)
+    translate(${x}px, ${y}px)
+    rotateX(${y}deg)
+    rotateY(${x}deg)
+  `;
+});
+
+card.addEventListener("mouseleave", () => {
+  card.style.transform = `rotateY(${flipped?180:0}deg)`;
+});
+
+/* ---------- TOUCH SUPPORT ---------- */
+card.addEventListener("touchmove", e => {
+  const t = e.touches[0];
+  const r = card.getBoundingClientRect();
+  const x = ((t.clientX - r.left)/r.width - 0.5) * 12;
+  const y = ((t.clientY - r.top)/r.height - 0.5) * -12;
+  card.style.transform = `
+    rotateY(${flipped?180:0}deg)
+    rotateX(${y}deg)
+    rotateY(${x}deg)
+  `;
+});
+
+card.addEventListener("touchend", () => {
+  card.style.transform = `rotateY(${flipped?180:0}deg)`;
+});
+</script>
+
+</body>
+</html>
